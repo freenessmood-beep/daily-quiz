@@ -197,9 +197,24 @@
     box-shadow: 0 8px 0 #fbc02d;
   }
   .start-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #fbc02d; }
+
+  /* Back to home */
+  .home-link {
+    position: fixed; top: 14px; left: 14px; z-index: 50;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: inherit; font-size: 18px; font-weight: bold;
+    text-decoration: none;
+    padding: 10px 18px; border-radius: 30px;
+    background: #ffffff; color: #2e7d32;
+    border: 3px solid #4caf50;
+    box-shadow: 0 4px 0 #43a047;
+  }
+  .home-link:active { transform: translateY(3px); box-shadow: 0 1px 0 #43a047; }
 </style>
 </head>
 <body>
+
+<a class="home-link" href="index.html">🏠 Home</a>
 
 <div class="start-overlay" id="startOverlay">
   <h2>🐝 Spelling Bee 🐝</h2>
