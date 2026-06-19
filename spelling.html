@@ -409,8 +409,11 @@ function renderQuestion() {
     feedbackEl.className = 'feedback';
   }
 
+  const editableCount = given[qIndex].filter(g => !g).length;
+  const hintUsed = hints[qIndex].some(Boolean);
   checkBtn.disabled = checked;
-  hintBtn.disabled = checked || allRevealed();
+  // Hint only when 2+ blanks, not yet checked, and not already used for this word
+  hintBtn.disabled = checked || editableCount < 2 || hintUsed;
   updateScoreboard();
   updateNav();
 
@@ -486,6 +489,7 @@ function onLetterKeydown(e) {
 // Reveal one more correct letter as a hint
 function giveHint() {
   if (solved[qIndex] !== null) return;
+  if (hints[qIndex].some(Boolean)) return;   // one hint per word only
   const cur = quiz[qIndex];
   // find letters not yet revealed by hint; prefer empty/wrong ones
   let target = -1;
@@ -510,6 +514,14 @@ function giveHint() {
 function checkWord() {
   if (solved[qIndex] !== null) return;
   const cur = quiz[qIndex];
+  // Require every blank to be filled before checking
+  const anyEmpty = typed[qIndex].some((ch, i) => !given[qIndex][i] && !ch);
+  if (anyEmpty) {
+    feedbackEl.textContent = '✏️ Fill in all the letters first!';
+    feedbackEl.className = 'feedback bad';
+    focusFirstEmpty();
+    return;
+  }
   const guess = typed[qIndex].join('').toLowerCase();
   const correct = guess === cur.word;
   solved[qIndex] = correct;
@@ -520,7 +532,8 @@ function checkWord() {
 function updateNav() {
   prevBtn.disabled = (qIndex === 0);
   nextBtn.textContent = (qIndex === TOTAL - 1) ? 'Finish 🏁' : 'Next ➡️';
-  nextBtn.disabled = false;
+  // Can't advance until this word has been answered (checked)
+  nextBtn.disabled = (solved[qIndex] === null);
 }
 
 function goPrev() { if (qIndex > 0) { qIndex--; renderQuestion(); } }
