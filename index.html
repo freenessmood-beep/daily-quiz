@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌿 Daily Quiz 🌿</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; }
+  body {
+    font-family: "Comic Sans MS", "Microsoft JhengHei", "PingFang TC", "Trebuchet MS", sans-serif;
+    background: linear-gradient(160deg, #d7f0d2 0%, #b6e3ac 100%);
+    color: #1f4d23;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    user-select: none;
+  }
+  .card {
+    background: #f3fbf0;
+    border: 6px solid #4caf50;
+    border-radius: 28px;
+    box-shadow: 0 12px 30px rgba(31, 77, 35, 0.25);
+    padding: 40px 32px 44px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+  }
+  .mascot {
+    font-size: 80px;
+    line-height: 1;
+    margin-bottom: 6px;
+    animation: bounce 1.6s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  h1 {
+    font-size: 44px;
+    color: #2e7d32;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    font-size: 20px;
+    color: #4f7a52;
+    margin-bottom: 32px;
+  }
+
+  /* Big tappable links to each quiz */
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .quiz-link {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    text-align: left;
+    text-decoration: none;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 22px 26px;
+    border-radius: 22px;
+    background: #66bb6a;
+    color: #ffffff;
+    box-shadow: 0 6px 0 #43a047;
+    transition: transform 0.08s, background 0.15s;
+  }
+  .quiz-link:hover { background: #57a95b; }
+  .quiz-link:active { transform: translateY(4px); box-shadow: 0 2px 0 #43a047; }
+  .quiz-link .emoji { font-size: 46px; line-height: 1; }
+  .quiz-link .label { display: flex; flex-direction: column; }
+  .quiz-link .label small {
+    font-size: 17px;
+    font-weight: normal;
+    opacity: 0.92;
+    margin-top: 2px;
+  }
+
+  .footer {
+    margin-top: 30px;
+    font-size: 16px;
+    color: #6a8d6d;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="mascot">🐰</div>
+  <h1>🌿 Daily Quiz 🌿</h1>
+  <div class="subtitle">Pick a game and let's learn! 🥕</div>
+
+  <!-- To add a new quiz, copy one <a class="quiz-link"> block below
+       and point href to your new page file. -->
+  <nav class="menu">
+    <a class="quiz-link" href="math.html">
+      <span class="emoji">🧮</span>
+      <span class="label">Math Mission<small>Add &amp; subtract — secret agent fun</small></span>
+    </a>
+    <a class="quiz-link" href="spelling.html">
+      <span class="emoji">🐝</span>
+      <span class="label">Spelling Bee<small>Look at the picture and spell the word</small></span>
+    </a>
+    <a class="quiz-link" href="chinese-quiz.html">
+      <span class="emoji">🐰</span>
+      <span class="label">小兔子認字樂園<small>注音・部首・造詞 認字練習</small></span>
+    </a>
+  </nav>
+
+  <div class="footer">🌱 Have fun and keep learning! 🌱</div>
+</div>
+
+<script>
+  /* Disable right-click */
+  document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+</body>
+</html>

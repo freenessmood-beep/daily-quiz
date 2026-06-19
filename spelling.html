@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌿 Spelling Bee 🌿</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
+    background: linear-gradient(160deg, #d7f0d2 0%, #b6e3ac 100%);
+    color: #1f4d23;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    user-select: none;
+  }
+  .card {
+    background: #f3fbf0;
+    border: 6px solid #4caf50;
+    border-radius: 28px;
+    box-shadow: 0 12px 30px rgba(31, 77, 35, 0.25);
+    padding: 36px 32px 40px;
+    width: 100%;
+    max-width: 560px;
+    text-align: center;
+  }
+  h1 {
+    font-size: 34px;
+    color: #2e7d32;
+    margin-bottom: 6px;
+  }
+  .subtitle { font-size: 16px; color: #4f7a52; margin-bottom: 20px; }
+
+  /* Scoreboard */
+  .scoreboard {
+    display: flex;
+    justify-content: space-around;
+    background: #e2f4dd;
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 24px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .scoreboard span { color: #1b5e20; font-size: 26px; }
+
+  /* Picture (emoji) */
+  .picture {
+    font-size: 130px;
+    line-height: 1.1;
+    margin: 6px 0 4px;
+  }
+  .word-label { font-size: 16px; color: #4f7a52; margin-bottom: 18px; }
+
+  /* Letter boxes */
+  .letters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .letter {
+    width: 52px;
+    height: 64px;
+    font-size: 38px;
+    font-weight: bold;
+    font-family: inherit;
+    text-align: center;
+    text-transform: lowercase;
+    color: #1b5e20;
+    background: #ffffff;
+    border: none;
+    border-bottom: 8px solid #66bb6a;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 4px 0 rgba(67, 160, 71, 0.25);
+    caret-color: #2e7d32;
+  }
+  .letter:focus {
+    outline: none;
+    background: #f1faee;
+    border-bottom-color: #2e7d32;
+  }
+  .letter.hint {
+    background: #fff8d6;
+    color: #b58a00;
+    border-bottom-color: #fbc02d;
+  }
+  .letter.given {
+    background: #e3edff;
+    color: #1a3e8c;
+    border-bottom-color: #5c8df0;
+  }
+  .letter.correct { background: #d7f0d2; border-bottom-color: #2e7d32; }
+  .letter.wrong { background: #fcdcdc; border-bottom-color: #c62828; color: #c62828; }
+  .letter:disabled { opacity: 1; }
+
+  /* Action buttons */
+  .actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 22px;
+  }
+  .act-btn {
+    flex: 1;
+    font-size: 22px;
+    font-family: inherit;
+    font-weight: bold;
+    padding: 16px 0;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    color: #ffffff;
+    transition: transform 0.08s, background 0.15s;
+  }
+  .check-btn { background: #66bb6a; box-shadow: 0 6px 0 #43a047; }
+  .check-btn:hover { background: #57a95b; }
+  .check-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #43a047; }
+  .hint-btn { background: #ffb74d; box-shadow: 0 6px 0 #f57c00; color: #5a3700; }
+  .hint-btn:hover { background: #ffa726; }
+  .hint-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #f57c00; }
+  .act-btn:disabled {
+    background: #c8e6c9 !important;
+    color: #94b897;
+    box-shadow: 0 6px 0 #aed5b0 !important;
+    cursor: not-allowed;
+  }
+
+  /* Feedback */
+  .feedback {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 22px;
+    min-height: 36px;
+  }
+  .feedback.good { color: #2e7d32; }
+  .feedback.bad { color: #c62828; }
+
+  /* Navigation */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 18px;
+  }
+  .nav-btn {
+    flex: 1;
+    font-size: 22px;
+    font-family: inherit;
+    font-weight: bold;
+    padding: 14px 0;
+    border: none;
+    border-radius: 16px;
+    background: #43a047;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #2e7d32;
+    transition: transform 0.08s;
+  }
+  .nav-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #2e7d32; }
+  .nav-btn:disabled {
+    background: #c8e6c9;
+    color: #94b897;
+    box-shadow: 0 5px 0 #aed5b0;
+    cursor: not-allowed;
+  }
+
+  .start-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(27, 94, 32, 0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+  }
+  .start-overlay h2 { font-size: 40px; margin-bottom: 14px; }
+  .start-overlay p { font-size: 18px; max-width: 420px; margin-bottom: 28px; line-height: 1.5; }
+  .start-btn {
+    font-size: 32px;
+    font-family: inherit;
+    font-weight: bold;
+    padding: 18px 50px;
+    border: none;
+    border-radius: 50px;
+    background: #ffeb3b;
+    color: #1b5e20;
+    cursor: pointer;
+    box-shadow: 0 8px 0 #fbc02d;
+  }
+  .start-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #fbc02d; }
+</style>
+</head>
+<body>
+
+<div class="start-overlay" id="startOverlay">
+  <h2>🐝 Spelling Bee 🐝</h2>
+  <p>Look at the picture and spell the word!<br>
+  The <b>first</b> and <b>last</b> letters are already filled in.<br>
+  Type the missing letters. Stuck? Tap <b>💡 Hint</b> to reveal one.</p>
+  <button class="start-btn" id="startBtn">GO! 🚀</button>
+</div>
+
+<div class="card">
+  <h1>🌿 Spelling Bee 🌿</h1>
+  <div class="subtitle">Look &amp; Spell — Picture Words</div>
+
+  <div class="scoreboard">
+    <div>⭐ Score<br><span id="score">0</span></div>
+    <div>🎯 Word<br><span id="qnum">1</span>/10</div>
+    <div>💡 Hints<br><span id="hintsUsed">0</span></div>
+  </div>
+
+  <div class="picture" id="picture">🐰</div>
+  <div class="word-label" id="wordLabel">How many letters? Spell it below!</div>
+
+  <div class="letters" id="letters"></div>
+
+  <div class="feedback" id="feedback"></div>
+
+  <div class="actions">
+    <button class="act-btn hint-btn" id="hintBtn">💡 Hint</button>
+    <button class="act-btn check-btn" id="checkBtn">✅ Check</button>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn">⬅️ Previous</button>
+    <button class="nav-btn" id="nextBtn">Next ➡️</button>
+  </div>
+</div>
+
+<script>
+/* ---------------- Word bank (emoji + word) ---------------- */
+// Easy words for a 6-year-old, each shown as a clear emoji picture.
+const WORDS = [
+  { word: 'cat',  emoji: '🐱' },
+  { word: 'dog',  emoji: '🐶' },
+  { word: 'sun',  emoji: '☀️' },
+  { word: 'bus',  emoji: '🚌' },
+  { word: 'hat',  emoji: '🎩' },
+  { word: 'cup',  emoji: '☕' },
+  { word: 'pig',  emoji: '🐷' },
+  { word: 'cow',  emoji: '🐮' },
+  { word: 'fox',  emoji: '🦊' },
+  { word: 'bee',  emoji: '🐝' },
+  { word: 'egg',  emoji: '🥚' },
+  { word: 'fish', emoji: '🐟' },
+  { word: 'frog', emoji: '🐸' },
+  { word: 'star', emoji: '⭐' },
+  { word: 'tree', emoji: '🌳' },
+  { word: 'ball', emoji: '⚽' },
+  { word: 'book', emoji: '📖' },
+  { word: 'cake', emoji: '🍰' },
+  { word: 'duck', emoji: '🦆' },
+  { word: 'bird', emoji: '🐦' },
+  { word: 'milk', emoji: '🥛' },
+  { word: 'moon', emoji: '🌙' },
+  { word: 'leaf', emoji: '🍃' },
+  { word: 'apple', emoji: '🍎' }
+];
+
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+// Pick TOTAL unique words at random
+function pickWords(n) {
+  const pool = [...WORDS];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = randInt(0, i);
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, n);
+}
+
+/* ---------------- Game state ---------------- */
+const TOTAL = 10;
+let qIndex = 0;
+let quiz = [];        // [{emoji, word}]
+let typed = [];       // typed[q] = array of letters the player entered
+let hints = [];       // hints[q] = array of booleans (which letters were hint-revealed)
+let solved = [];      // solved[q] = true/false/null  (null = not checked yet)
+
+const pictureEl = document.getElementById('picture');
+const wordLabelEl = document.getElementById('wordLabel');
+const lettersEl = document.getElementById('letters');
+const feedbackEl = document.getElementById('feedback');
+const scoreEl = document.getElementById('score');
+const qnumEl = document.getElementById('qnum');
+const hintsUsedEl = document.getElementById('hintsUsed');
+const hintBtn = document.getElementById('hintBtn');
+const checkBtn = document.getElementById('checkBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+let given = [];       // given[q] = array of booleans (first & last letters always shown)
+
+function buildQuiz() {
+  quiz = pickWords(TOTAL);
+  typed = quiz.map(q => Array(q.word.length).fill(''));
+  hints = quiz.map(q => Array(q.word.length).fill(false));
+  given = quiz.map(q => Array(q.word.length).fill(false));
+  solved = quiz.map(() => null);
+  // Always provide the first and last letter for each word
+  quiz.forEach((q, i) => {
+    const len = q.word.length;
+    given[i][0] = true;
+    typed[i][0] = q.word[0];
+    if (len > 1) {
+      given[i][len - 1] = true;
+      typed[i][len - 1] = q.word[len - 1];
+    }
+  });
+  qIndex = 0;
+}
+
+function computeStats() {
+  let score = 0, hintCount = 0;
+  for (let i = 0; i < TOTAL; i++) {
+    if (solved[i] === true) score++;
+    hintCount += hints[i].filter(Boolean).length;
+  }
+  return { score, hintCount };
+}
+
+function updateScoreboard() {
+  const { score, hintCount } = computeStats();
+  scoreEl.textContent = score;
+  hintsUsedEl.textContent = hintCount;
+  qnumEl.textContent = qIndex + 1;
+}
+
+// Build the letter input boxes for the current word
+function renderQuestion() {
+  const cur = quiz[qIndex];
+  const isSolved = solved[qIndex] === true;
+  const checked = solved[qIndex] !== null;
+
+  pictureEl.textContent = cur.emoji;
+  wordLabelEl.textContent = cur.word.length + ' letters';
+
+  lettersEl.innerHTML = '';
+  for (let i = 0; i < cur.word.length; i++) {
+    const box = document.createElement('input');
+    box.className = 'letter';
+    box.type = 'text';
+    box.maxLength = 1;
+    box.dataset.idx = i;
+    box.value = typed[qIndex][i] || '';
+    box.autocomplete = 'off';
+    box.autocapitalize = 'off';
+    box.spellcheck = false;
+
+    if (given[qIndex][i]) {
+      box.classList.add('given');
+      box.disabled = true;            // first & last letters are always shown and locked
+    } else if (hints[qIndex][i]) {
+      box.classList.add('hint');
+    }
+
+    if (checked) {
+      box.disabled = true;
+      if (isSolved) {
+        box.classList.add('correct');
+      } else {
+        // show which letters were right/wrong
+        if ((typed[qIndex][i] || '').toLowerCase() === cur.word[i]) box.classList.add('correct');
+        else box.classList.add('wrong');
+      }
+    }
+
+    box.addEventListener('input', onLetterInput);
+    box.addEventListener('keydown', onLetterKeydown);
+    lettersEl.appendChild(box);
+  }
+
+  // Feedback for an already-checked word
+  if (checked) {
+    if (isSolved) {
+      feedbackEl.textContent = '✅ ' + cur.word.toUpperCase() + ' — perfect spelling!';
+      feedbackEl.className = 'feedback good';
+    } else {
+      feedbackEl.textContent = '❌ The word was "' + cur.word + '"';
+      feedbackEl.className = 'feedback bad';
+    }
+  } else {
+    feedbackEl.textContent = '';
+    feedbackEl.className = 'feedback';
+  }
+
+  checkBtn.disabled = checked;
+  hintBtn.disabled = checked || allRevealed();
+  updateScoreboard();
+  updateNav();
+
+  // Focus first empty box for typing
+  if (!checked) focusFirstEmpty();
+}
+
+function letterBoxes() { return lettersEl.querySelectorAll('.letter'); }
+
+function focusFirstEmpty() {
+  const boxes = letterBoxes();
+  for (const b of boxes) {
+    if (!b.disabled && !b.value) { b.focus(); return; }
+  }
+  // otherwise focus the first typeable box
+  for (const b of boxes) { if (!b.disabled) { b.focus(); return; } }
+}
+
+function allRevealed() {
+  return hints[qIndex].every((h, i) => h || given[qIndex][i]);
+}
+
+// Next/previous box the player can actually type in (skips locked given letters)
+function nextEditable(i) {
+  const boxes = letterBoxes();
+  for (let j = i + 1; j < boxes.length; j++) if (!boxes[j].disabled) return boxes[j];
+  return null;
+}
+function prevEditable(i) {
+  const boxes = letterBoxes();
+  for (let j = i - 1; j >= 0; j--) if (!boxes[j].disabled) return boxes[j];
+  return null;
+}
+
+function onLetterInput(e) {
+  const box = e.target;
+  const i = +box.dataset.idx;
+  // keep only the last typed character, letters only
+  let v = box.value.replace(/[^a-zA-Z]/g, '').toLowerCase();
+  v = v.slice(-1);
+  box.value = v;
+  typed[qIndex][i] = v;
+  // auto-advance to next typeable box
+  if (v) {
+    const next = nextEditable(i);
+    if (next) next.focus();
+  }
+}
+
+function onLetterKeydown(e) {
+  const box = e.target;
+  const i = +box.dataset.idx;
+  if (e.key === 'Backspace' && !box.value) {
+    const prev = prevEditable(i);
+    if (prev) {
+      e.preventDefault();
+      prev.value = '';
+      typed[qIndex][+prev.dataset.idx] = '';
+      prev.focus();
+    }
+  } else if (e.key === 'ArrowLeft') {
+    const prev = prevEditable(i);
+    if (prev) { e.preventDefault(); prev.focus(); }
+  } else if (e.key === 'ArrowRight') {
+    const next = nextEditable(i);
+    if (next) { e.preventDefault(); next.focus(); }
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (!checkBtn.disabled) checkWord();
+  }
+}
+
+// Reveal one more correct letter as a hint
+function giveHint() {
+  if (solved[qIndex] !== null) return;
+  const cur = quiz[qIndex];
+  // find letters not yet revealed by hint; prefer empty/wrong ones
+  let target = -1;
+  for (let i = 0; i < cur.word.length; i++) {
+    if (given[qIndex][i] || hints[qIndex][i]) continue;
+    if ((typed[qIndex][i] || '').toLowerCase() !== cur.word[i]) { target = i; break; }
+  }
+  if (target === -1) {
+    // all current letters already correct — reveal next un-hinted anyway
+    for (let i = 0; i < cur.word.length; i++) {
+      if (!given[qIndex][i] && !hints[qIndex][i]) { target = i; break; }
+    }
+  }
+  if (target === -1) return;
+
+  typed[qIndex][target] = cur.word[target];
+  hints[qIndex][target] = true;
+  playPop();
+  renderQuestion();
+}
+
+function checkWord() {
+  if (solved[qIndex] !== null) return;
+  const cur = quiz[qIndex];
+  const guess = typed[qIndex].join('').toLowerCase();
+  const correct = guess === cur.word;
+  solved[qIndex] = correct;
+  if (correct) playDing(); else playBuzz();
+  renderQuestion();
+}
+
+function updateNav() {
+  prevBtn.disabled = (qIndex === 0);
+  nextBtn.textContent = (qIndex === TOTAL - 1) ? 'Finish 🏁' : 'Next ➡️';
+  nextBtn.disabled = false;
+}
+
+function goPrev() { if (qIndex > 0) { qIndex--; renderQuestion(); } }
+function goNext() {
+  if (qIndex < TOTAL - 1) { qIndex++; renderQuestion(); }
+  else endGame();
+}
+
+function endGame() {
+  const { score, hintCount } = computeStats();
+  pictureEl.textContent = '🎉';
+  wordLabelEl.textContent = '';
+  lettersEl.innerHTML = '';
+  document.querySelector('.actions').style.display = 'none';
+  document.querySelector('.nav').style.display = 'none';
+
+  let msg;
+  if (score === TOTAL) msg = '🏆 Perfect! ' + score + ' / ' + TOTAL + ' — Spelling Champion!';
+  else if (score >= 7) msg = '🌟 Great spelling! ' + score + ' / ' + TOTAL;
+  else if (score >= 4) msg = '👍 Good effort! ' + score + ' / ' + TOTAL;
+  else msg = '💪 Keep practicing! ' + score + ' / ' + TOTAL;
+  feedbackEl.textContent = msg + (hintCount ? '  (💡 ' + hintCount + ' hints used)' : '');
+  feedbackEl.className = 'feedback good';
+
+  const again = document.createElement('button');
+  again.className = 'start-btn';
+  again.style.marginTop = '20px';
+  again.textContent = 'Play Again 🔄';
+  again.onclick = () => location.reload();
+  feedbackEl.after(again);
+}
+
+hintBtn.addEventListener('click', giveHint);
+checkBtn.addEventListener('click', checkWord);
+prevBtn.addEventListener('click', goPrev);
+nextBtn.addEventListener('click', goNext);
+
+/* ---------------- Audio: Web Audio API (sound effects only) ---------------- */
+let audioCtx = null;
+
+function ensureCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function note(freq, start, dur, type = 'triangle', vol = 0.18) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const filter = audioCtx.createBiquadFilter();
+  osc.type = type;
+  osc.frequency.value = freq;
+  filter.type = 'lowpass';
+  filter.frequency.value = 1600;
+  filter.Q.value = 0.7;
+  const attack = 0.04, release = Math.min(0.3, dur * 0.6);
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.linearRampToValueAtTime(vol, start + attack);
+  gain.gain.setValueAtTime(vol, start + Math.max(attack, dur - release));
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+  osc.connect(filter).connect(gain).connect(audioCtx.destination);
+  osc.start(start);
+  osc.stop(start + dur + 0.05);
+}
+
+const F = { C4:261.6, D4:293.7, E4:329.6, F4:349.2, G4:392.0, A4:440.0, B4:493.9,
+            C5:523.3, D5:587.3, E5:659.3, G5:784.0 };
+
+function playDing() {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  note(F.C5, t, 0.12, 'triangle', 0.2);
+  note(F.E5, t + 0.1, 0.18, 'triangle', 0.2);
+}
+function playBuzz() {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  note(110, t, 0.3, 'sawtooth', 0.16);
+}
+function playPop() {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  note(F.G5, t, 0.10, 'sine', 0.16);
+}
+
+/* ---------------- Start ---------------- */
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('startOverlay').style.display = 'none';
+  ensureCtx();
+  buildQuiz();
+  renderQuestion();
+});
+
+/* ---------------- Disable right-click ---------------- */
+document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+</body>
+</html>
