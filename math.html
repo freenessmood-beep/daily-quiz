@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌿 Math Mission 🌿</title>
+<title>🌿 數學任務 🌿</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -171,23 +171,23 @@
 </head>
 <body>
 
-<a class="home-link" href="index.html">🏠 Home</a>
+<a class="home-link" href="index.html">🏠 回首頁</a>
 
 <div class="start-overlay" id="startOverlay">
-  <h2>🕶️ Your Mission 🕶️</h2>
-  <p>Agent, your mission is to solve <b>10 secret math codes</b>!<br>
-  Tap the right answer before time runs out.</p>
-  <button class="start-btn" id="startBtn">GO! 🚀</button>
+  <h2>🕶️ 你的任務 🕶️</h2>
+  <p>小特務，你的任務是破解 <b>10 道祕密數學密碼</b>！<br>
+  在時間結束前點選正確答案。</p>
+  <button class="start-btn" id="startBtn">出發！🚀</button>
 </div>
 
 <div class="card">
-  <h1>🌿 Math Mission 🌿</h1>
-  <div class="subtitle">Add &amp; Subtract — Grade 1 Secret Agent</div>
+  <h1>🌿 數學任務 🌿</h1>
+  <div class="subtitle">加法與減法 — 一年級小特務</div>
 
   <div class="scoreboard">
-    <div>⭐ Score<br><span id="score">0</span></div>
-    <div>🎯 Question<br><span id="qnum">1</span>/10</div>
-    <div>🔥 Streak<br><span id="streak">0</span></div>
+    <div>⭐ 分數<br><span id="score">0</span></div>
+    <div>🎯 題目<br><span id="qnum">1</span>/10</div>
+    <div>🔥 連續答對<br><span id="streak">0</span></div>
   </div>
 
   <div class="question" id="question">3 + 2 = <span class="blank">?</span></div>
@@ -202,8 +202,8 @@
   <div class="feedback" id="feedback"></div>
 
   <div class="nav">
-    <button class="nav-btn" id="prevBtn">⬅️ Previous</button>
-    <button class="nav-btn" id="nextBtn">Next ➡️</button>
+    <button class="nav-btn" id="prevBtn">⬅️ 上一題</button>
+    <button class="nav-btn" id="nextBtn">下一題 ➡️</button>
   </div>
 </div>
 
@@ -315,10 +315,10 @@ function renderQuestion() {
   // Feedback text for an already-answered question
   if (answered) {
     if (picked === cur.answer) {
-      feedbackEl.textContent = '✅ Mission point! Great job!';
+      feedbackEl.textContent = '✅ 任務得分！做得好！';
       feedbackEl.className = 'feedback good';
     } else {
-      feedbackEl.textContent = '❌ The code was ' + cur.answer;
+      feedbackEl.textContent = '❌ 正確密碼是 ' + cur.answer;
       feedbackEl.className = 'feedback bad';
     }
   } else {
@@ -333,10 +333,10 @@ function renderQuestion() {
 function updateNav() {
   prevBtn.disabled = (qIndex === 0);
   if (qIndex === TOTAL - 1) {
-    nextBtn.textContent = 'Finish 🏁';
+    nextBtn.textContent = '完成 🏁';
     nextBtn.disabled = false;
   } else {
-    nextBtn.textContent = 'Next ➡️';
+    nextBtn.textContent = '下一題 ➡️';
     nextBtn.disabled = false;
   }
 }
@@ -367,17 +367,17 @@ function endGame() {
   optsEl.style.display = 'none';
   document.querySelector('.nav').style.display = 'none';
   let msg;
-  if (score === TOTAL) msg = '🏆 Perfect! Mission Accomplished, Agent!';
-  else if (score >= 7) msg = '🌟 Awesome work, super agent!';
-  else if (score >= 4) msg = '👍 Good effort! Try again!';
-  else msg = '💪 Keep practicing, you can do it!';
+  if (score === TOTAL) msg = '🏆 太完美了！任務圓滿達成，小特務！';
+  else if (score >= 7) msg = '🌟 表現超棒，超級小特務！';
+  else if (score >= 4) msg = '👍 很努力喔！再挑戰一次吧！';
+  else msg = '💪 多多練習，你一定做得到！';
   feedbackEl.textContent = msg;
   feedbackEl.className = 'feedback good';
 
   const again = document.createElement('button');
   again.className = 'start-btn';
   again.style.marginTop = '20px';
-  again.textContent = 'Play Again 🔄';
+  again.textContent = '再玩一次 🔄';
   again.onclick = () => location.reload();
   feedbackEl.after(again);
 }
