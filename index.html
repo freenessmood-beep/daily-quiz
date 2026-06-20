@@ -81,6 +81,33 @@
     margin-top: 2px;
   }
 
+  /* Separator + heading for the reward section */
+  .section-title {
+    margin: 34px 0 16px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #b5651d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .section-title::before,
+  .section-title::after {
+    content: "";
+    flex: 1;
+    height: 3px;
+    border-radius: 3px;
+    background: #e0c9a6;
+  }
+  /* Carrot-orange variant of the big tappable link */
+  .quiz-link.reward {
+    background: #ff9233;
+    box-shadow: 0 6px 0 #e07a1f;
+  }
+  .quiz-link.reward:hover { background: #f5851f; }
+  .quiz-link.reward:active { box-shadow: 0 2px 0 #e07a1f; }
+
   .footer {
     margin-top: 30px;
     font-size: 16px;
@@ -109,6 +136,14 @@
     <a class="quiz-link" href="chinese-quiz.html">
       <span class="emoji">🐰</span>
       <span class="label">小兔子認字樂園<small>注音・部首・造詞 認字練習</small></span>
+    </a>
+  </nav>
+
+  <div class="section-title">🥕 Rewards 🥕</div>
+  <nav class="menu">
+    <a class="quiz-link reward" href="https://good-kid-score-app.vercel.app/" target="_blank" rel="noopener">
+      <span class="emoji">⭐</span>
+      <span class="label">Good Kid Score<small>Track carrots &amp; see how well you did!</small></span>
     </a>
   </nav>
 
