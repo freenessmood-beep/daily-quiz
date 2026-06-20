@@ -1,0 +1,18 @@
+/* Taiwan Bopomofo (注音) font — Bpmf 字咍楷.
+   Each Han character is drawn with its 注音 shown alongside, which helps
+   young readers. Loaded once here and shared by every page. */
+@font-face {
+  font-family: 'Bpmf ZihiKai';
+  src: url('fonts/BpmfZihiKai.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;   /* show fallback text first, swap in when loaded */
+}
+
+/* Put the 注音 font first in the stack. !important + the fact that
+   font-family is inherited means this wins over each page's inline
+   body rule and cascades to every element (buttons use inherit too). */
+body {
+  font-family: 'Bpmf ZihiKai', "Comic Sans MS", "Microsoft JhengHei",
+               "PingFang TC", "Trebuchet MS", sans-serif !important;
+}
