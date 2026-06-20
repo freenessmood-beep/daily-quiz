@@ -118,7 +118,9 @@ body::before {
   background: linear-gradient(135deg, #fff 0%, #f3fbf0 100%);
   cursor: pointer; transition: all 0.2s;
   min-width: 95px; text-align: center;
-  font-family: inherit; color: #1b5e20;
+  /* Plain font (no 注音) so the options don't reveal the pronunciation */
+  font-family: "Microsoft JhengHei", "PingFang TC", "Heiti TC", "Noto Sans TC", sans-serif !important;
+  color: #1b5e20;
   box-shadow: 0 2px 8px rgba(31,77,35,0.1);
 }
 .opt-btn:hover {
