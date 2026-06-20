@@ -49,7 +49,7 @@
     margin-bottom: 32px;
   }
 
-  /* Big tappable links to each quiz */
+  /* Big tappable subject links */
   .menu {
     display: flex;
     flex-direction: column;
@@ -73,15 +73,24 @@
   .quiz-link:hover { background: #57a95b; }
   .quiz-link:active { transform: translateY(4px); box-shadow: 0 2px 0 #43a047; }
   .quiz-link .emoji { font-size: 46px; line-height: 1; }
-  .quiz-link .label { display: flex; flex-direction: column; }
+  .quiz-link .label { display: flex; flex-direction: column; flex: 1; }
   .quiz-link .label small {
     font-size: 17px;
     font-weight: normal;
     opacity: 0.92;
     margin-top: 2px;
   }
+  .quiz-link .arrow { font-size: 30px; opacity: 0.85; }
 
-  /* Separator + heading for the reward section */
+  /* Carrot-orange variant for the reward link */
+  .quiz-link.reward {
+    background: #ff9233;
+    box-shadow: 0 6px 0 #e07a1f;
+  }
+  .quiz-link.reward:hover { background: #f5851f; }
+  .quiz-link.reward:active { box-shadow: 0 2px 0 #e07a1f; }
+
+  /* Separator before the reward link */
   .section-title {
     margin: 34px 0 16px;
     font-size: 22px;
@@ -100,13 +109,6 @@
     border-radius: 3px;
     background: #e0c9a6;
   }
-  /* Carrot-orange variant of the big tappable link */
-  .quiz-link.reward {
-    background: #ff9233;
-    box-shadow: 0 6px 0 #e07a1f;
-  }
-  .quiz-link.reward:hover { background: #f5851f; }
-  .quiz-link.reward:active { box-shadow: 0 2px 0 #e07a1f; }
 
   .footer {
     margin-top: 30px;
@@ -120,33 +122,24 @@
 <div class="card">
   <div class="mascot">🐰</div>
   <h1>🌿 每日小測驗 🌿</h1>
-  <div class="subtitle">選一個遊戲，一起來學習吧！🥕</div>
+  <div class="subtitle">先選一個科目吧！🥕</div>
 
-  <!-- To add a new quiz, copy one <a class="quiz-link"> block into the
-       matching subject section, or add a new <div class="section-title">
-       + <nav class="menu"> pair for a new subject. -->
-
-  <div class="section-title">📖 國語 📖</div>
+  <!-- Level 1: subjects. Each links to that subject's page (Level 2). -->
   <nav class="menu">
-    <a class="quiz-link" href="chinese-quiz.html">
-      <span class="emoji">🐰</span>
-      <span class="label">小兔子認字樂園<small>注音・部首・造詞 認字練習</small></span>
+    <a class="quiz-link" href="chinese.html">
+      <span class="emoji">📖</span>
+      <span class="label">國語<small>注音・認字・造詞</small></span>
+      <span class="arrow">➡️</span>
     </a>
-  </nav>
-
-  <div class="section-title">🔤 英文 🔤</div>
-  <nav class="menu">
-    <a class="quiz-link" href="spelling.html">
-      <span class="emoji">🐝</span>
-      <span class="label">Spelling Bee<small>Look at the picture and spell the word</small></span>
+    <a class="quiz-link" href="english.html">
+      <span class="emoji">🔤</span>
+      <span class="label">英文<small>English spelling &amp; words</small></span>
+      <span class="arrow">➡️</span>
     </a>
-  </nav>
-
-  <div class="section-title">🧮 數學 🧮</div>
-  <nav class="menu">
     <a class="quiz-link" href="math.html">
       <span class="emoji">🧮</span>
-      <span class="label">數學任務<small>加法與減法 — 小特務大冒險</small></span>
+      <span class="label">數學<small>加減・時鐘・形狀・乘法</small></span>
+      <span class="arrow">➡️</span>
     </a>
   </nav>
 
