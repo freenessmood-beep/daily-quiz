@@ -83,6 +83,8 @@ body::before {
 .main-char {
   position: relative; z-index: 1;
   text-align: center; margin: 10px auto;
+  /* Plain font (no 注音) — this character is for the child to recognise */
+  font-family: "Microsoft JhengHei", "PingFang TC", "Heiti TC", "Noto Sans TC", sans-serif !important;
   font-size: 7em; color: #1b5e20;
   text-shadow: 3px 3px 0 rgba(165,214,167,0.6);
   animation: charFloat 3s ease-in-out infinite;
@@ -132,17 +134,17 @@ body::before {
   border-color: #66bb6a; background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
   color: #2e7d32;
 }
-.opt-btn.correct::after { content: " \u2714"; }
+.opt-btn.correct::after { content: " \2714"; }
 .opt-btn.wrong {
   border-color: #ef5350; background: linear-gradient(135deg, #ffebee, #ffcdd2);
   color: #c62828; text-decoration: line-through;
 }
-.opt-btn.wrong::after { content: " \u2718"; }
+.opt-btn.wrong::after { content: " \2718"; }
 .opt-btn.missed {
   border-color: #ffa726; background: linear-gradient(135deg, #fff8e1, #ffecb3);
   color: #e65100;
 }
-.opt-btn.missed::after { content: " \u25CB"; }
+.opt-btn.missed::after { content: " \25CB"; }
 .opt-btn:disabled { cursor: default; }
 .btn-row {
   display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
